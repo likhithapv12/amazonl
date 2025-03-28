@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Total Sales </title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            background-image:url('static/img2.jpg');
+        }
+        nav {
+            background-color: #0056b3;
+            display: flex;
+            justify-content: center;
+            padding: 20px 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 16px;
+            padding: 8px 15px;
+            border-radius: 5px;
+            transition: background 0.3s ease;
+        }
+        nav a:hover {
+            background-color: #003f7f;
+        }
+        .container {
+            max-width: 900px;
+            margin: 50px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        canvas {
+            margin: 20px auto;
+            display: block;
+            max-width: 100%;
+        }
+
+        .chart-container {
+            width: 50%;
+            margin: 20px auto;
+            padding: 10px;
+            text-align: center;
+        }
+    </style>
+    <!-- Include Chart.js from CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav>
+        <a href="/">Home</a>
+        <a href="/products">Products</a>
+        <a href="/add_orders">Add Order</a>
+        <a href="/orders">Orders</a>
+        <a href="/wishlist">Wishlist</a>
+        <a href="/cost">Total Sales Cost</a>
+        <a href="/help">Help</a>
+        <a href="/about">About</a>
+        <a href="/login">Login</a>
+    </nav>
+    <!-- Main Content -->
+    <div class="container">
+        <h1>Total Sales Cost</h1>
+        <p>The total sales cost is: <span style="color: #4CAF50;">₹{{ total_cost }}</span></p>
+        <a href="/">Back to Orders</a>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <h1>Total Sales</h1>
+        <!-- Chart Canvas -->
+        <canvas id="orderChart"></canvas>
+    </div>
+
+    <script>
+        // Data extracted from the table
+        const productNames = [
+            "Home Appliances",
+            "Furniture",
+            "Electronics",
+            "Fashion",
+        ];
+
+        const totalPrices = [
+            10,000,
+            15,000,
+            20,000,
+            25,000,
+            30,000
+        ];
+
+        // Chart.js Configuration
+        const ctx = document.getElementById('orderChart').getContext('2d');
+        const orderChart = new Chart(ctx, {
+            type: 'bar', // Chart type
+            data: {
+                labels: productNames, // X-axis labels (product names)
+                datasets: [{
+                    label: 'Total Sales',
+                    xlabel: 'Categories',
+                    ylabel : 'Sales',
+                    data: totalPrices, // Y-axis data (total prices)
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

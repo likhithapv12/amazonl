@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Wishlist</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            background-image:url('static/img2.jpg');
+        }
+        header {
+            background-color: #0056b3;
+            color: white;
+            padding: 15px 0;
+            text-align: center;
+        }
+        nav {
+            background-color: #0056b3;
+            padding: 10px;
+            text-align: center;
+        }
+        nav a {
+            color: white;
+            margin: 0 15px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        nav a:hover {
+            color: #f4b400;
+        }
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .wishlist-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+            background-color: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .wishlist-table th, .wishlist-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        .wishlist-table th {
+            background-color: #0056b3;
+            color: white;
+        }
+        .wishlist-table td a {
+            color: #d9534f;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .wishlist-table td a:hover {
+            color: #c9302c;
+        }
+        h2 {
+            margin-bottom: 20px;
+        }
+        .form-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .form-container label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        .form-container input[type="text"],
+        .form-container input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        .form-container button {
+            background-color: #0056b3;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 4px;
+        }
+        .form-container button:hover {
+            background-color: #0056b3;
+        }
+      footer {
+            text-align: center;
+            width:100%;
+            padding:2px;
+            background-color:  #0056b3;
+            color: white;
+            margin-top: 20px;
+            font-size: 0.9em;
+            position:fixed;
+            bottom:0;
+        }
+
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Your Wishlist</h1>
+    </header>
+
+    <nav>
+        <a href="/">Home</a>
+        <a href="/products">Products</a>
+        <a href="/add_orders">Add Order</a>
+        <a href="/orders">Orders</a>
+        <a href="/wishlist">Wishlist</a>
+        <a href="/cost">Total Sales Cost</a>
+        <a href="/help">Help</a>
+        <a href="/about">About</a>
+        <a href="/login">Login</a>
+    </nav>
+
+    <div class="container">
+        <h2>Wishlist Items</h2>
+        <table id="wishlist-table" class="wishlist-table">
+            <thead>
+                <tr>
+                    <th>Product Name</th>
+                    <th>Customer Name</th>
+                    <th>Price</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Wishlist items will be dynamically inserted here -->
+            </tbody>
+        </table>
+
+        <div class="form-container">
+            <h3>Add to Wishlist</h3>
+            <form id="wishlist-form">
+                <label for="product_name">Product Name:</label>
+                <input type="text" id="product_name" name="product_name" required>
+
+                <label for="customer_name">Customer Name:</label>
+                <input type="text" id="customer_name" name="customer_name" required>
+
+                <label for="price">Price:</label>
+                <input type="number" step="0.01" id="price" name="price" required>
+
+                <button type="submit">Add to Wishlist</button>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 Your Wishlist. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+        // Initialize the wishlist from localStorage (if available)
+        function loadWishlist() {
+            const wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+            const tableBody = document.querySelector('#wishlist-table tbody');
+            tableBody.innerHTML = ''; // Clear the table first
+
+            wishlist.forEach((item, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${item.product_name}</td>
+                    <td>${item.customer_name}</td>
+                    <td>₹${item.price.toFixed(2)}</td>
+                    <td><a href="wishlist" onclick="deleteItem(${index})">Delete</a></td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Add new item to wishlist
+        document.getElementById('wishlist-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const product_name = document.getElementById('product_name').value;
+            const customer_name = document.getElementById('customer_name').value;
+            const price = parseFloat(document.getElementById('price').value);
+
+            const newItem = { product_name, customer_name, price };
+
+            // Get current wishlist from localStorage
+            const wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+            wishlist.push(newItem);
+
+            // Save updated wishlist to localStorage
+            localStorage.setItem('wishlist', JSON.stringify(wishlist));
+
+            // Reload the wishlist table
+            loadWishlist();
+
+            // Clear the form
+            document.getElementById('wishlist-form').reset();
+        });
+
+        // Function to delete an item from the wishlist
+        function deleteItem(index) {
+            const wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+            wishlist.splice(index, 1); // Remove the item at the specified index
+
+            // Save updated wishlist to localStorage
+            localStorage.setItem('wishlist', JSON.stringify(wishlist));
+
+            // Reload the wishlist table
+            loadWishlist();
+        }
+
+        // Load the wishlist when the page is loaded
+        window.onload = loadWishlist;
+    </script>
+</body>
+</html>
